@@ -1,0 +1,43 @@
+% Amplitude modulation and demodulation with AWGN and at the SNR=5,50db 
+% define modulating freq. 
+clear all;
+close all;
+clc;
+fm = 10;
+fc =250;
+%sampling frequency fs>2*(fc+BW)
+fs=2*(fc+2*fm)*10;
+t=0:1/fs:(2/fm)-(1/fs);
+%%modulating signal
+Vm=1;
+Wm=2*pi*fm*t;
+x=sin(Wm);
+x=Vm*x;
+%% carrier signal 
+Vc=1;
+c=Vc*sin(2*pi*fc*t);
+%% Am Mdulation
+Sam=ammod(x,fc,fs,0,Vm);
+figure,
+subplot(5,1,1);
+plot(t,x);
+title('Messge signal');
+subplot(5,1,2);
+plot(t,c);
+title('carrier signal');
+subplot(5,1,3);
+plot(t,Sam);
+title('Am modulaton ');
+ 
+%% adding noise
+noise_SNR=5;
+vrect=awgn(Sam,noise_SNR);
+subplot(5,1,4)
+plot(t,vrect);
+title(' Am modulation adding AWGN noise ');
+ 
+%% Demodulation of AM signal 
+y=amdemod(vrect,fc,fs,0,Vc);
+subplot(5,1,5);
+plot(t,y);
+title('Demodulated signal')
