@@ -1,0 +1,81 @@
+t=-2*pi:0.1:2*2*pi
+fm=0.1
+s1=sin(2*pi*fm*t)
+subplot(2,4,1)
+plot(t,s1)
+xlabel('time')
+ylabel('amlitude')
+title('sine wave')
+
+hold on
+
+s2=cos(2*pi*fm*t)
+subplot(2,4,2)
+plot(t,s2)
+xlabel('time')
+ylabel('amlitude')
+title('cos wave')
+
+hold on
+
+unitstep=t>=0
+subplot(2,4,3)
+plot(t,unitstep)
+xlabel('time')
+ylabel('amlitude')
+title('unit step')
+
+hold on
+
+ramp=t
+subplot(2,4,4)
+plot(t,ramp)
+xlabel('time')
+ylabel('amlitude')
+title('ramp')
+
+hold on
+
+s3=square(t)
+subplot(2,4,5)
+plot(t,s3)
+xlabel('time')
+ylabel('amlitude')
+title('square wave')
+hold on
+
+s4=sawtooth(t,0.5)
+subplot(2,4,6)
+plot(t,s4)
+xlabel('time')
+ylabel('amlitude')
+title('sawtoth')
+
+hold on
+
+s5=sign(t)
+subplot(2,4,7)
+plot(t,s5)
+xlabel('time')
+ylabel('amlitude')
+title('signum wave')
+
+hold on
+
+s6=exp(-t)
+subplot(2,4,8)
+plot(t,s6)
+xlabel('time')
+ylabel('amlitude')
+title('exponentially decay')
+
+t=0:0.01:2*2*pi
+fm=5000
+s1=sin(2*pi*fm*t)
+s1dft=fft(s1)
+%f1=fft(t,s1)
+%subplot(2,4,1)
+plot(abs(s1dft))
+xlabel('frequency')
+ylabel('amlitude')
+title('frequeny spectrum of sine wave')
