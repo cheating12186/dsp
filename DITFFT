@@ -1,0 +1,39 @@
+x = input("Enter the sequence: ");
+
+
+p = nextpow2(length(x));
+x = [x zeros(1, (2^p) - length(x))];
+N = length(x);
+
+
+s = log2(N);
+
+
+x = bitrevorder(x);
+
+
+disp('Input sequence after bit-reversal: ');
+disp(x);
+
+
+for stage = 1:s
+    stride = 2^stage; 
+    half_stride = stride / 2; 
+    w_m = exp(-1j * 2 * pi / stride); 
+    
+    for k = 1:half_stride
+        for group = k:stride:N
+            p = group; 
+            q = group + half_stride;
+            temp = x(q) * (w_m^(k-1));
+            x(q) = x(p) - temp;
+            x(p) = x(p) + temp;
+        end
+    end
+
+    fprintf('After Stage %d:\n', stage);
+    disp(x);
+end
+
+disp('Final FFT result: ');
+disp(x);
