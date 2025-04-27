@@ -1,0 +1,29 @@
+clc;
+clear all;
+close all;
+
+% Define numerator and denominator coefficients
+b = [1 -0.5];       % Example: Zero at z = 0.5
+a = [1 -1.2 0.36];  % Example: Poles at z = 0.6 ± j0.6
+
+% Frequency vector (omega)
+w = linspace(-pi, pi, 1024);
+
+% Evaluate frequency response H(e^jw)
+[H, omega] = freqz(b, a, w);
+
+% Plot magnitude response
+subplot(2,1,1);
+plot(omega, abs(H), 'LineWidth', 1.5);
+title('Magnitude Response');
+xlabel('\omega (rad/sample)');
+ylabel('|H(e^{j\omega})|');
+grid on;
+
+% Plot phase response
+subplot(2,1,2);
+plot(omega, angle(H), 'LineWidth', 1.5);
+title('Phase Response');
+xlabel('\omega (rad/sample)');
+ylabel('∠H(e^{j\omega}) (radians)');
+grid on;
