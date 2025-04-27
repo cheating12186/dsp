@@ -1,0 +1,56 @@
+clc;
+clear all;
+close all;
+
+% Frequencies for evaluating frequency response
+w = linspace(-pi, pi, 1024);
+
+% Pole angles (fixed)
+theta = pi/4;
+
+% Pole radii to compare (distance from unit circle)
+radii = [0.3, 0.6, 0.9, 0.99];
+
+% Create figure
+figure;
+
+for i = 1:length(radii)
+    r = radii(i);
+    
+    % Create complex-conjugate poles at re^{±jθ}
+    p1 = r*exp(1j*theta);
+    p2 = r*exp(-1j*theta);
+    
+    % Get denominator from poles (a)
+    a = poly([p1, p2]);  % Get polynomial coefficients
+    b = 1;               % System with no zeros
+    
+    % Frequency response
+    [H, omega] = freqz(b, a, w);
+
+    % Plot magnitude
+    subplot(2, 1, 1);
+    hold on;
+    plot(omega, abs(H), 'DisplayName', ['r = ' num2str(r)]);
+    
+    % Plot phase
+    subplot(2, 1, 2);
+    hold on;
+    plot(omega, angle(H), 'DisplayName', ['r = ' num2str(r)]);
+end
+
+% Labels for magnitude plot
+subplot(2, 1, 1);
+title('Effect of Pole Distance on Magnitude Response');
+xlabel('\omega (rad/sample)');
+ylabel('|H(e^{j\omega})|');
+legend show;
+grid on;
+
+% Labels for phase plot
+subplot(2, 1, 2);
+title('Effect of Pole Distance on Phase Response');
+xlabel('\omega (rad/sample)');
+ylabel('∠H(e^{j\omega}) (radians)');
+legend show;
+grid on;
