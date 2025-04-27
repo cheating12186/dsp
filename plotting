@@ -1,0 +1,130 @@
+%% sine function
+clear all;
+close all;
+clc;
+N = input('enter the number of cycles:-');
+n = 0:0.05:N;
+x = 10*sin(2*pi*n);
+subplot(1,2,1);
+plot(n,x);
+xlabel("Time");
+ylabel("Amplitude");
+
+
+
+%%triangular wave
+clear all;
+close all;
+clc;
+N = input('enter the number of cycles:-');
+M = input('enter amplitude:-');
+n1 = 0:1:M;
+n2 = M:-1:0;
+n = [];
+for i = 1:N
+    n = [n n1 n2];
+end
+subplot(1,2,1);
+plot(n);
+xlabel("Time");
+ylabel("Amplitude");
+title("Continuous time triangular wave");
+grid;
+subplot(1,2,2);
+stem(n);
+xlabel("Time");
+ylabel("Amplitude");
+title("Discrete time triangular wave");
+grid;
+
+
+
+
+%%trapezoid wave
+clear all;
+close all;
+clc;
+N = input('enter the number of cycles:-');
+M = input('enter amplitude:-');
+n1 = 0:1:M;
+n2 = M;
+n3 = M;
+n4 = M;
+n5 = M:-1:0;
+n = [];
+for i = 1:N
+    n = [n n1 n2 n3 n4 n5];
+end
+subplot(2,1,1);
+plot(n);
+xlabel("Time");
+ylabel("Amplitude");
+title("Continuous time trapezoid wave");
+grid;
+subplot(2,1,2);
+stem(n);
+xlabel("Time");
+ylabel("Amplitude");
+title("Discrete time trapezoid wave");
+grid;
+
+
+
+
+%%unit impulse
+clear all;
+close all;
+clc;
+n = -10:10; % Symmetric range
+x = (n == 0);
+stem(n, x, 'r', 'LineWidth', 1.5);
+xlabel("n (Time Index)");
+ylabel("Amplitude");
+title("Discrete-Time Unit Impulse Function");
+grid on;
+
+
+
+
+%%unit step
+clear all;
+close all;
+clc;
+n = -10:10;
+x = (n >= 0);
+stem(n, x, 'b', 'LineWidth', 1.5);
+xlabel("n (Time Index)");
+ylabel("Amplitude");
+title("Discrete-Time Unit Step Function");
+grid on;
+
+
+
+
+
+%%unit ramp
+clear all;
+close all;
+clc;
+n = -10:10;
+x = n .* (n >= 0);
+stem(n, x, 'g', 'LineWidth', 1.5);
+xlabel("n (Time Index)");
+ylabel("Amplitude");
+title("Discrete-Time Unit Ramp Function");
+grid on;
+
+
+
+
+%%paraboloc funciton
+clear all;
+close all;
+clc;
+n = -10:10;
+x = (n.^2 / 2) .* (n >= 0);
+stem(n, x, 'm', 'LineWidth', 1.5);
+xlabel("n (Time Index)");
+ylabel("Amplitude");
+title("Discrete-Time Parabolic Function");
+grid on;
