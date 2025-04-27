@@ -1,0 +1,37 @@
+clc;
+clear all;
+close all;
+
+% Create a figure
+figure;
+hold on;
+axis equal;
+grid on;
+
+% Plot the unit circle
+theta = linspace(0, 2*pi, 500);
+plot(cos(theta), sin(theta), 'b--', 'LineWidth', 1.5);  % Unit circle
+
+% Plot axes
+line([-2 2], [0 0], 'Color', 'k');  % Real axis
+line([0 0], [-2 2], 'Color', 'k');  % Imaginary axis
+
+% Set plot limits
+xlim([-2 2]);
+ylim([-2 2]);
+
+% Optional: Add poles and zeros
+% Example poles and zeros
+poles = [0.5 + 0.5j, 0.5 - 0.5j];  % Example: complex conjugate poles
+zeros = [1, -0.7];                 % Example: real zeros
+
+% Plot poles (x)
+plot(real(poles), imag(poles), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+% Plot zeros (o)
+plot(real(zeros), imag(zeros), 'go', 'MarkerSize', 10, 'LineWidth', 2);
+
+% Labels
+title('Z-Plane Visualization');
+xlabel('Re\{z\}');
+ylabel('Im\{z\}');
+legend('Unit Circle', 'Real Axis', 'Imag Axis', 'Poles', 'Zeros');
