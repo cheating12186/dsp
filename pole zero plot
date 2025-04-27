@@ -1,0 +1,16 @@
+clc;
+clear all;
+close all;
+
+% Define numerator and denominator of transfer function H(z)
+% H(z) = (b0 + b1*z^-1 + ... ) / (1 + a1*z^-1 + ... )
+b = [1 -0.5];     % Zeros at z = 0.5
+a = [1 -1.2 0.36]; % Poles at z = 0.6 ± j0.6
+
+% Plot poles and zeros in the z-plane
+figure;
+zplane(b, a);
+title('Zero-Pole Plot using zplane');
+xlabel('Re\{z\}');
+ylabel('Im\{z\}');
+grid on;
