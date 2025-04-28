@@ -22,21 +22,17 @@ for n = 1:N1
  end
  end
 end
-T1 = 1:N1; % Time vector for manual convolution 
-result
-T2 = 1:N2; % Time vector for predefined convolution 
-result
+T1 = 1:N1; % Time vector for manual convolution result
+T2 = 1:N2; % Time vector for predefined convolution result
 % Plotting
 subplot(4,1,1);
-stem(T1, x(1:N1),'filled'); % Plot only up to the length 
-of N1
+stem(T1, x(1:N1),'filled'); % Plot only up to the length of N1
 xlabel("n");
 ylabel("x(n)");
 title("Input Signal x(n)");
 grid on;
 subplot(4,1,2);
-stem(T1, h(1:N1),'filled'); % Plot only up to the length 
-of N1
+stem(T1, h(1:N1),'filled'); % Plot only up to the length of N1
 xlabel("n");
 ylabel("h(n)");
 title("Input Signal h(n)");
