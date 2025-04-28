@@ -1,0 +1,55 @@
+clear all;
+close all;
+clc;
+
+% Define n and initialize x_n
+n = -70:1:70;
+length_of_sgn = length(n);
+x_n = zeros(1, length_of_sgn); 
+
+% Unit Step Function
+for ii = 1:length_of_sgn
+    if n(ii) >= 0
+        x_n(ii) = 1;
+    else
+        x_n(ii) = 0;
+    end
+end
+
+% Plot the Unit Step Function
+subplot(2, 2, [1 2]);
+stem(n, x_n, 'filled');
+title('Unit Step Function u[n]');
+xlabel('n');
+ylabel('u[n]');
+grid on;
+
+% Define complex z-plane circle (Z-transform grid)
+omega = linspace(-pi, pi, 100);
+z = [];
+for r = linspace(0, 3, 100)
+    z = [z; r * exp(1j * omega)];
+end
+
+% Compute Z-transform
+xfinal = [];
+for c = 1:size(z, 1)
+    X = [];
+    for a = 1:size(z, 2)
+        xtemp = 0;
+        for b = 1:length(n)
+            xtemp = xtemp + x_n(b) * (z(c, a))^(-n(b));
+        end
+        X = [X xtemp];
+    end
+    xfinal = [xfinal; X];
+end
+
+% Plot the Z-transform magnitude (in dB)
+subplot(2,2,3);
+mesh(real(z), imag(z), 20*log10(abs(xfinal))); 
+xlabel('Real Part of z');
+ylabel('Imaginary Part of z');
+zlabel('|X(z)| in dB');
+title('Z-transform Magnitude Response (Unit Step)');
+grid on;
