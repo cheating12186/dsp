@@ -1,0 +1,121 @@
+% All basic signal plots in one code
+
+clear all;
+close all;
+clc;
+
+%% Sine function
+N = input('Enter the number of cycles for sine wave: ');
+n = 0:0.05:N;
+x = 10*sin(2*pi*n);
+
+figure;
+subplot(1,2,1);
+plot(n, x, 'LineWidth', 1.5);
+xlabel("Time");
+ylabel("Amplitude");
+title("Continuous-Time Sine Wave");
+grid on;
+
+%% Triangular wave
+N_tri = input('Enter the number of cycles for triangular wave: ');
+M_tri = input('Enter amplitude for triangular wave: ');
+n1 = 0:1:M_tri;
+n2 = M_tri:-1:0;
+n_tri = [];
+
+for i = 1:N_tri
+    n_tri = [n_tri n1 n2];
+end
+
+subplot(1,2,2);
+plot(n_tri, 'LineWidth', 1.5);
+xlabel("Time");
+ylabel("Amplitude");
+title("Continuous-Time Triangular Wave");
+grid on;
+
+figure;
+subplot(2,1,1);
+plot(n_tri, 'LineWidth', 1.5);
+xlabel("Time");
+ylabel("Amplitude");
+title("Continuous-Time Triangular Wave");
+grid on;
+
+subplot(2,1,2);
+stem(n_tri, 'LineWidth', 1.5);
+xlabel("Time");
+ylabel("Amplitude");
+title("Discrete-Time Triangular Wave");
+grid on;
+
+%% Trapezoid wave
+N_trap = input('Enter the number of cycles for trapezoid wave: ');
+M_trap = input('Enter amplitude for trapezoid wave: ');
+n1 = 0:1:M_trap;
+n2 = M_trap;
+n3 = M_trap;
+n4 = M_trap;
+n5 = M_trap:-1:0;
+n_trap = [];
+
+for i = 1:N_trap
+    n_trap = [n_trap n1 n2 n3 n4 n5];
+end
+
+figure;
+subplot(2,1,1);
+plot(n_trap, 'LineWidth', 1.5);
+xlabel("Time");
+ylabel("Amplitude");
+title("Continuous-Time Trapezoid Wave");
+grid on;
+
+subplot(2,1,2);
+stem(n_trap, 'LineWidth', 1.5);
+xlabel("Time");
+ylabel("Amplitude");
+title("Discrete-Time Trapezoid Wave");
+grid on;
+
+%% Unit Impulse
+n = -10:10;
+x_impulse = (n == 0);
+
+figure;
+stem(n, x_impulse, 'r', 'LineWidth', 1.5);
+xlabel("n (Time Index)");
+ylabel("Amplitude");
+title("Discrete-Time Unit Impulse Function");
+grid on;
+
+%% Unit Step
+x_step = (n >= 0);
+
+figure;
+stem(n, x_step, 'b', 'LineWidth', 1.5);
+xlabel("n (Time Index)");
+ylabel("Amplitude");
+title("Discrete-Time Unit Step Function");
+grid on;
+
+%% Unit Ramp
+x_ramp = n .* (n >= 0);
+
+figure;
+stem(n, x_ramp, 'g', 'LineWidth', 1.5);
+xlabel("n (Time Index)");
+ylabel("Amplitude");
+title("Discrete-Time Unit Ramp Function");
+grid on;
+
+%% Parabolic Function
+x_parabola = (n.^2 / 2) .* (n >= 0);
+
+figure;
+stem(n, x_parabola, 'm', 'LineWidth', 1.5);
+xlabel("n (Time Index)");
+ylabel("Amplitude");
+title("Discrete-Time Parabolic Function");
+grid on;
