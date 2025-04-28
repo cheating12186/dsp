@@ -1,0 +1,272 @@
+----------------------------------linearity---------------------------------------------
+
+clear all;
+close all;
+clc;
+% Define Ɵme index
+n = -50:1:50;
+N = length(n);
+omega = linspace(-pi, pi, 100);
+% Define two signals for linearity proof:
+% Define unit ramp funcƟon δ(n)
+x1 = zeros(1, N);
+for ii = 1:N
+   if (n(ii) >= 0)
+    x1(ii) = ii;
+   else
+    x1(ii) = 0;
+   end
+end
+% Define unit step funcƟon u(n)
+x2 = zeros(1, N);
+for ii = 1:N
+if (n(ii) >= 0)
+x2(ii) = 1; % Step funcƟon value is 1 for n >= 0
+else
+x2(ii) = 0;
+end
+end
+% Plot x1(n) and x2(n)
+figure;
+subplot(3,2,1);
+stem(n, x1, 'r', 'filled'); grid on;
+xlabel('n'); ylabel('x_1(n)');
+title('Unit ramp Function r(n)');
+subplot(3,2,2);
+stem(n, x2, 'b', 'filled'); grid on;
+xlabel('n'); ylabel('x_2(n)');
+title('Unit Step Function u(n)');
+% Define scaling factors
+a = 5; b = 20;
+% Compute DTFT of x1(n) and x2(n)
+X1 = Compute_DTFT(x1, n, omega);
+X2 = Compute_DTFT(x2, n, omega);
+% Compute DTFT of the linear combinaƟon
+y = a*x1 + b*x2;
+Y = Compute_DTFT(y, n, omega);
+% Verify Linearity: Y(ω) should be a*X1(ω) +b*X2(ω)
+Y_expected = a*X1 + b*X2;
+% Plot DTFT Magnitudes to verify Linearity
+subplot(3,2,3);
+plot(omega, abs(X1), 'r'); grid on;
+xlabel('\omega'); ylabel('|X_1(\omega)|');
+title('Magnitude of DTFT of x_1(n)');
+subplot(3,2,4);
+plot(omega, abs(X2), 'b'); grid on;
+xlabel('\omega'); ylabel('|X_2(\omega)|');
+title('Magnitude of DTFT of x_2(n)');
+subplot(3,2,5);
+plot(omega, abs(Y), 'k'); grid on;
+xlabel('\omega'); ylabel('|Y(\omega)|');
+title('Magnitude of DTFT of a*x_1(n) + b*x_2(n)');
+subplot(3,2,6);
+plot(omega, abs(Y_expected), 'g'); grid on;
+xlabel('\omega'); ylabel('|Expected Y(\omega)|');
+title('Expected Magnitude a*|X_1(\omega)| +b*|X_2(\omega)|');
+% FuncƟon to Compute DTFT
+function X = Compute_DTFT(x, n, omega)
+X = zeros(1, length(omega)); % Preallocate DTFT array
+for a = 1:length(omega)
+X(a) = sum(x .* exp(-1j * omega(a) * n));
+end
+end
+
+
+
+-------------------------------------------------------------parsevals theorem------------------------------------------------------------
+linearity_dtft.m
+clear all; close all; clc;
+% Define Ɵme index
+n = -50:50;
+N = length(n);
+% Define Signal: unit step FuncƟon 
+x = zeros(1, N);
+for ii = 1:N
+if (n(ii) >= 0)
+x(ii) = 1;
+else 
+    x(ii)=0;
+end
+end
+% Compute Energy in Time Domain
+E_time = sum(x.^2);
+% Compute DTFT
+omega = linspace(-pi, pi, 1000);
+X = Compute_DTFT(x, n, omega);
+% Compute Energy in Frequency Domain using Trapezoidal Rule
+E_freq = (1/(2*pi)) * trapz_integrate(abs(X).^2,omega);
+% Compare Energies
+fprintf('Energy in Time Domain = %.4f\n', E_time);
+fprintf('Energy in Frequency Domain = %.4f\n',E_freq);
+if abs(E_time - E_freq) < 1e-4
+disp('Parseval’s theorem is verified!');
+else
+disp('Energy mismatch! Check calculaƟons.');
+end
+% Plot Results
+figure;
+subplot(2,1,1);
+stem(n, x.^2, 'r', 'filled'); grid on;
+title('Energy in Time Domain (|x(n)|^2)');
+xlabel('n'); ylabel('|x(n)|^2');
+subplot(2,1,2);
+plot(omega, abs(X).^2 / (2*pi), 'b'); grid on;
+title('Energy in Frequency Domain (|X(\omega)|^2/ 2\pi)');
+xlabel('\omega'); ylabel('|X(\omega)|^2 / 2\pi');
+% FuncƟon to Compute DTFT
+function X = Compute_DTFT(x, n, omega)
+X = zeros(size(omega));
+for k = 1:length(omega)
+X(k) = sum(x .* exp(-1j * omega(k) * n));
+end
+end
+% Trapezoidal IntegraƟon FuncƟon 
+function integral_value = trapz_integrate(x, n)
+dx = n(2) - n(1);
+integral_value = (dx / 2) * (x(1) + x(end) + 2 *sum(x(2:end-1)));
+end
+
+
+-------------------------------------------------------------------------time reversal-----------------------------------------------------------------
+linearity_dtft.m
+% Time Reversal Property
+n=-50:50;
+x3=zeros(1,length(n));
+u = zeros(1, length(n));
+for jj=1:length(n)
+   if(n(jj)<0)
+       u(jj)=0;
+   else
+       u(jj)=1;
+   end
+end
+for ii=1:length(n)
+    x3(ii)=sin(n(ii))+u(ii);
+end
+
+subplot(3,2,1);
+stem(n,x3);
+xlabel("n"); % X-axis label
+ylabel("x3[n]"); % Y-axis label
+
+omega=linspace(-4*pi,4*pi,1000);
+
+X_original = zeros(1, length(omega)); % Preallocate array for efficiency
+for a=1:length (omega)
+    X_original(a) = sum(x3.*exp(-1j*omega(a)*n)); % Compute DTFT using summation definition
+end
+
+%%Compute Magnitude and Phase of DTFT
+magX_original=abs(X_original); % Compute magnitude spectrum
+phaseX_original=angle(X_original); % Compute phase spectrum
+
+% Plot Phase Spectrum of the original Sequence
+subplot(3,2,5);
+plot(omega/pi, phaseX_original); grid on; % Plot phase spectrum
+xlabel("Frequency (π)"); % Label X-axis
+ylabel("X(w)"); % Label Y-axis
+title("Phase Plot of original Sequence"); % Title for the phase plot
+
+%%Plot Magnitude Spectrum of the original Sequence
+
+subplot(3,2,3);
+plot(omega/pi, magX_original); grid on; % Plot magnitude spectrum
+xlabel("Frequency (π)"); % Label X-axis
+ylabel("|x(w)|"); % Label Y-axis
+title("Magnitude Plot of original Sequence"); % Title for the magnitude plot
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+x4 = flip(x3); % Reverse the sequence x3 to obtain x4
+% Plot the reversed sequence
+subplot(3,2,2);
+stem(n, x4); % Plot x4 in the second subplot
+title("Reversed Sequence"); % Title for the reversed sequence plot
+xlabel("n"); % X-axis label
+ylabel("x4[n]"); % Y-axis label
+
+%Compute DTFT of the Reversed Sequence
+
+omega=linspace(-4*pi,4*pi,1000);
+
+X_shifted = zeros(1, length(omega)); % Preallocate array for efficiency
+for a=1:length (omega)
+    X_shifted(a) = sum(x4.*exp(-1j*omega(a)*n)); % Compute DTFT using summation definition
+end
+
+%Compute Magnitude and Phase of DTFT (Reversed)
+magX_shifted=abs(X_shifted); % Compute magnitude spectrum
+phaseX_shifted=angle(X_shifted); % Compute phase spectrum
+
+%Plot Magnitude Spectrum of the Reversed Sequence
+
+subplot(3,2,4);
+plot(omega/pi, magX_shifted); grid on; % Plot magnitude spectrum
+xlabel("Frequency (π)"); % Label X-axis
+ylabel("|x(w)|"); % Label Y-axis
+title("Magnitude Plot of Reversed Sequence"); % Title for the magnitude plot
+
+% Plot Phase Spectrum of the Reversed Sequence
+subplot(3,2,6);
+plot(omega/pi, phaseX_shifted); grid on; % Plot phase spectrum
+xlabel("Frequency (π)"); % Label X-axis
+ylabel("X(w)"); % Label Y-axis
+title("Phase Plot of Reversed Sequence"); % Title for the phase plot
+
+
+--------------------------------------------------------------------time shifting----------------------------------------------------------------
+linearity_dtft.m
+clear all; close all; clc;
+% Define Ɵme index and frequency range
+n = -50:50;
+omega = linspace(-4*pi, 4*pi, 1000);
+% Define a rectangular pulse signal
+rect_N = 15; % Width of the rectangular pulse
+x = zeros(1, length(n));
+for ii = 1:length(n)
+if (n(ii) >= -rect_N) && (n(ii) <= rect_N)
+x(ii) = 1; % Assign 1 within the pulse width
+end
+end
+% Compute DTFT of the original signal
+X = Compute_DTFT(x, n, omega);
+% Define Ɵme shiŌ value
+k = 10;
+x_shifted = zeros(1, length(n));
+% Generate the shiŌed rectangular pulse
+for ii = 1:length(n)
+if (n(ii) >= -rect_N + k) && (n(ii) <= rect_N + k)
+x_shifted(ii) = 1;
+end
+end
+% Compute DTFT of the shiŌed signal
+X_shifted = Compute_DTFT(x_shifted, n, omega);
+% Expected DTFT of shiŌed signal using Ɵme-shifting property
+X_expected = X .* exp(-1j * omega * k);
+% Plot original and transformed signals
+figure;
+subplot(4,1,1);
+stem(n, x, 'r', 'filled'); grid on;
+xlabel('n'); ylabel('x(n)'); title('Original Signal x(n)');
+subplot(4,1,2);
+plot(omega, abs(X), 'b'); grid on;
+xlabel('\omega'); ylabel('|X(\omega)|');
+title('Magnitude of DTFT of x(n)');
+subplot(4,1,3);
+stem(n, x_shifted, 'k', 'filled'); grid on;
+xlabel('n'); ylabel('x(n - k)'); title(['Time-ShiftedSignal x(n - ', num2str(k), ')']);
+subplot(4,1,4);
+plot(omega, abs(X_shifted), 'g'); grid on;
+xlabel('\omega'); ylabel('|X_{shifted}(\omega)|');
+title('Magnitude of DTFT of x(n - k)');
+% FuncƟon to Compute DTFT
+function X = Compute_DTFT(x, n, omega)
+X = zeros(1, length(omega)); % Preallocate DTFT array
+for a = 1:length(omega)
+X(a) = sum(x .* exp(-1j * omega(a) * n)); %Compute DTFT sum
+end
+end
